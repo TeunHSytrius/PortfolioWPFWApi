@@ -1,0 +1,143 @@
+﻿
+# ==========================================
+# PortfolioWPFWApi - .gitignore
+# .NET 10 | ASP.NET Core | JetBrains Rider
+# ==========================================
+
+
+# ==========================================
+# 1. Build output
+# ==========================================
+
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+publish/
+
+
+# ==========================================
+# 2. JetBrains Rider
+# ==========================================
+
+.idea/
+*.sln.iml
+*.DotSettings.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+
+# ==========================================
+# 3. Visual Studio / VS Code
+# ==========================================
+
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# ==========================================
+# 4. Temporary files
+# ==========================================
+
+*.tmp
+*.temp
+*.bak
+*.cache
+*.log
+*~
+.DS_Store
+Thumbs.db
+
+
+# ==========================================
+# 5. Test results and coverage
+# ==========================================
+
+TestResults/
+coverage/
+coverage-report/
+*.trx
+*.coverage
+*.coveragexml
+
+
+# ==========================================
+# 6. NuGet packages
+# ==========================================
+
+*.nupkg
+*.snupkg
+packages/
+.nuget/packages/
+
+
+# ==========================================
+# 7. ASP.NET Core configuration
+# ==========================================
+
+# Local development configuration
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local secrets
+secrets.json
+**/secrets/
+*.secret
+*.secrets
+
+
+# ==========================================
+# 8. SQL Server and local databases
+# ==========================================
+
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3
+
+
+# ==========================================
+# 9. Certificates and private keys
+# ==========================================
+
+*.pfx
+*.p12
+*.key
+*.pem
+
+
+# ==========================================
+# 10. Deployment and publishing
+# ==========================================
+
+*.publishsettings
+*.pubxml.user
+*.pubxml
+*.azurePubxml
+PublishProfiles/
+
+
+# ==========================================
+# 11. Important project files
+# ==========================================
+
+# These should remain version-controlled:
+# Program.cs
+# Controllers, Services, Data, Models, DTOs
+# EF Core Migrations
+# *.csproj
+# *.sln / *.slnx
+# appsettings.json (without secrets)
+# README.md
