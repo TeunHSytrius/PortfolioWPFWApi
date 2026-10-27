@@ -1,13 +1,14 @@
 
 # PortfolioWPFWApi
 
-![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-ASP.NET_Core-239120?logo=csharp&logoColor=white)
-![SQL Server](https://img.shields.io/badge/Database-SQL_Server-CC2927)
-![EF Core](https://img.shields.io/badge/ORM-Entity_Framework_Core-purple)
-![License](https://img.shields.io/badge/License-Educational-blue)
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-ASP.NET_Core-239120?style=flat-square&logo=csharp&logoColor=white)
+![EF Core](https://img.shields.io/badge/ORM-Entity_Framework_Core-512BD4?style=flat-square)
+![SQL Server](https://img.shields.io/badge/Database-SQL_Server-CC2927?style=flat-square)
+![Rider](https://img.shields.io/badge/IDE-JetBrains_Rider-000000?style=flat-square&logo=rider&logoColor=white)
+![Education](https://img.shields.io/badge/Project-HBO--ICT-blue?style=flat-square)
 
-**Talen / Languages:** [Nederlands](#nederlands) | [English](#english)
+**Nederlands** | [English](#english)
 
 ---
 
@@ -15,96 +16,163 @@
 
 ## Over het project
 
-PortfolioWPFWApi is een backend voor mijn persoonlijke portfoliosite. Dit project maak ik voor het vak WPFW binnen de opleiding HBO-ICT Software Engineering aan De Haagse Hogeschool.
+PortfolioWPFWApi is de backend van mijn persoonlijke portfoliosite.
 
-Het doel is om een REST API te ontwikkelen waarmee ik projecten en blogposts kan beheren. Hiervoor gebruik ik ASP.NET Core, Entity Framework Core en Microsoft SQL Server.
+Ik maak dit project voor WPFW Opdracht 3 van de opleiding HBO-ICT Software Engineering aan De Haagse Hogeschool.
 
-Tijdens deze opdracht richt ik me vooral op het bouwen van een duidelijke backend, het scheiden van verantwoordelijkheden en het werken met een database.
+Het doel is om een REST API te bouwen waarmee ik mijn projecten en blogposts kan beheren. De gegevens worden opgeslagen in Microsoft SQL Server en de communicatie met de database verloopt via Entity Framework Core.
+
+Tijdens deze opdracht leer ik hoe ik een backend opbouw, hoe verschillende onderdelen samenwerken en hoe ik verantwoordelijkheden in mijn code kan scheiden.
+
+De repository bevat de backend. Mijn portfoliosite zelf staat in een aparte repository:
+
+[Mijn portfoliosite](https://github.com/TeunHSytrius/TeunHSytrius.github.io)
 
 ## Technologieën
+
+Voor dit project gebruik ik de volgende technologieën:
 
 | Technologie | Gebruik |
 |---|---|
 | C# | Programmeertaal |
 | .NET 10 | Framework |
-| ASP.NET Core Web API | REST API |
-| Entity Framework Core | Databasecommunicatie |
-| Microsoft SQL Server | Database |
-| Swagger UI | API testen en documenteren |
+| ASP.NET Core Web API | Backend en REST API |
+| Entity Framework Core | Communicatie met de database |
+| Microsoft SQL Server | Opslaan van gegevens |
+| Swagger UI | Testen van API-endpoints |
 | JetBrains Rider | Ontwikkelomgeving |
-| Git & GitHub | Versiebeheer |
+| Git en GitHub | Versiebeheer |
+| Trello | Planning en werkzaamheden |
 
 ## Functionaliteiten
 
-De API is bedoeld voor het beheren van twee onderdelen van mijn portfolio:
+De API wordt ontwikkeld voor twee onderdelen van mijn portfolio.
 
-**Projecten**
-- Alle projecten ophalen.
-- Eén project ophalen op basis van ID.
-- Een nieuw project toevoegen.
-- Een bestaand project wijzigen.
-- Een project verwijderen.
+### Projecten
 
-**Blogposts**
-- Alle blogposts ophalen.
-- Eén blogpost ophalen op basis van ID.
-- Een nieuwe blogpost toevoegen.
-- Een bestaande blogpost wijzigen.
-- Een blogpost verwijderen.
+Met de API wil ik de volgende acties ondersteunen:
 
-De API gebruikt DTO's om gegevens uit te wisselen en Entity Framework Core om gegevens op te slaan in SQL Server.
+| Methode | Endpoint | Functie |
+|---|---|---|
+| GET | `/api/projects` | Alle projecten ophalen |
+| GET | `/api/projects/{id}` | Eén project ophalen |
+| POST | `/api/projects` | Nieuw project toevoegen |
+| PUT | `/api/projects/{id}` | Project aanpassen |
+| DELETE | `/api/projects/{id}` | Project verwijderen |
+
+Een project bevat onder andere een titel, beschrijving, categorie, GitHub-link en datum.
+
+### Blogposts
+
+| Methode | Endpoint | Functie |
+|---|---|---|
+| GET | `/api/blogposts` | Alle blogposts ophalen |
+| GET | `/api/blogposts/{id}` | Eén blogpost ophalen |
+| POST | `/api/blogposts` | Nieuwe blogpost toevoegen |
+| PUT | `/api/blogposts/{id}` | Blogpost aanpassen |
+| DELETE | `/api/blogposts/{id}` | Blogpost verwijderen |
+
+Een blogpost bevat een titel, inhoud en publicatiedatum.
+
+De routes hierboven zijn de beoogde API-routes. De daadwerkelijke werking wordt tijdens de ontwikkeling in Swagger getest.
 
 ## Projectstructuur
 
-Ik gebruik een structuur met verschillende lagen. Hierdoor blijft de code overzichtelijk en heeft ieder onderdeel een eigen verantwoordelijkheid.
+Ik gebruik een structuur met verschillende lagen. Ik heb hiervoor gekozen omdat ik de verantwoordelijkheden in mijn applicatie duidelijk wil scheiden.
+
+De structuur die ik wil gebruiken:
 
 ```text
 PortfolioWPFWApi/
 │
-├── Controllers/     # Verwerken HTTP-verzoeken
-├── Services/        # Applicatielogica
-├── Data/            # Database en DbContext
-├── Models/          # Database-entiteiten
-├── DTOs/            # Gegevens voor API-verzoeken
-├── Migrations/      # Databasewijzigingen
+├── .gitignore
+├── README.md
+├── PortfolioWPFWApi.sln
 │
-├── Program.cs       # Configuratie van de API
-└── appsettings.json # Algemene instellingen
+├── docs/
+│   └── AI_GEBRUIK.md
+│
+└── PortfolioWPFWApi/
+    │
+    ├── Controllers/
+    │   ├── ProjectsController.cs
+    │   └── BlogpostsController.cs
+    │
+    ├── Services/
+    │   ├── ProjectService.cs
+    │   └── BlogpostService.cs
+    │
+    ├── Data/
+    │   └── ApplicationDbContext.cs
+    │
+    ├── Models/
+    │   ├── Project.cs
+    │   └── Blogpost.cs
+    │
+    ├── DTOs/
+    │   ├── Projects/
+    │   │   ├── CreateProjectDto.cs
+    │   │   ├── UpdateProjectDto.cs
+    │   │   └── ProjectDto.cs
+    │   │
+    │   └── Blogposts/
+    │       ├── CreateBlogpostDto.cs
+    │       ├── UpdateBlogpostDto.cs
+    │       └── BlogpostDto.cs
+    │
+    ├── Migrations/
+    ├── Properties/
+    │
+    ├── Program.cs
+    ├── appsettings.json
+    └── PortfolioWPFWApi.csproj
 ```
 
-Een controller ontvangt het HTTP-verzoek en roept de juiste service aan. De service verwerkt de logica en gebruikt Entity Framework Core voor de database.
+Dit is mijn geplande structuur. Niet alle bestanden hoeven vanaf het begin aanwezig te zijn.
 
-Zo voorkom ik dat alle code in één bestand of controller terechtkomt.
+### Waarom deze structuur?
 
-## Installatie en gebruik
+Ik wil voorkomen dat alle functionaliteit in de controllers terechtkomt.
+
+De controllers verwerken HTTP-verzoeken en bepalen welke HTTP-resultaten teruggegeven worden.
+
+De services bevatten de applicatielogica. Via de DbContext wordt de database benaderd.
+
+Daarnaast gebruik ik DTO's. Hiermee bepaal ik welke gegevens de API ontvangt en terugstuurt, zonder rechtstreeks database-entiteiten te gebruiken.
+
+Ik vind deze indeling overzichtelijk en denk dat het hierdoor makkelijker wordt om onderdelen aan te passen.
+
+## Installatie
 
 ### Benodigdheden
 
-Voor het uitvoeren van dit project heb je nodig:
+Voor het draaien van deze API heb je nodig:
 
 - .NET 10 SDK
-- Microsoft SQL Server
-- Een IDE zoals JetBrains Rider of Visual Studio
+- Microsoft SQL Server of SQL Server Express
+- JetBrains Rider of Visual Studio
 - Git
 
-### Repository clonen
+### 1. Repository clonen
 
 ```bash
 git clone https://github.com/TeunHSytrius/PortfolioWPFWApi.git
 cd PortfolioWPFWApi
 ```
 
-### Dependencies installeren
+### 2. Dependencies herstellen
 
 ```bash
 dotnet restore
 ```
 
-### Database configureren
+Dit installeert de NuGet-packages die voor het project nodig zijn.
 
-De connectionstring wordt lokaal ingesteld. Gevoelige gegevens, zoals wachtwoorden, worden niet opgeslagen in de GitHub-repository.
+### 3. Database configureren
 
-Voor lokale ontwikkeling gebruik ik hiervoor .NET User Secrets.
+De applicatie gebruikt Microsoft SQL Server.
+
+Voor lokale gevoelige configuratie gebruik ik .NET User Secrets, zodat wachtwoorden of andere geheime gegevens niet in GitHub terechtkomen.
 
 Ga naar de projectmap:
 
@@ -112,82 +180,146 @@ Ga naar de projectmap:
 cd PortfolioWPFWApi
 ```
 
-Stel de connectionstring in, bijvoorbeeld voor SQL Server Express met Windows-authenticatie:
+Als User Secrets nog niet zijn ingesteld:
 
 ```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost\SQLEXPRESS;Database=PortfolioWPFW;Trusted_Connection=True;TrustServerCertificate=True;"
+dotnet user-secrets init
 ```
 
-De database wordt via Entity Framework Core gekoppeld. De gebruikte methode voor databaseaanmaak en eventuele migraties wordt in de projectconfiguratie vastgelegd.
+Een voorbeeld van een connectionstring voor SQL Server Express met Windows-authenticatie:
 
-### Applicatie starten
+```powershell
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=.\SQLEXPRESS;Database=PortfolioWPFW;Trusted_Connection=True;TrustServerCertificate=True;'
+```
 
-Voer vanuit de projectmap uit:
+De exacte servernaam hangt af van je eigen SQL Server-installatie.
+
+De database wordt gekoppeld via Entity Framework Core en een eigen DbContext.
+
+**Database aanmaken:** de definitieve instructies voor EF Core-migraties of `EnsureCreated` worden toegevoegd zodra dit onderdeel is ingericht.
+
+### 4. Applicatie starten
+
+Vanuit de projectmap:
 
 ```bash
 dotnet run
 ```
 
-De API kan vervolgens getest worden via Swagger UI op het lokale adres van de applicatie, met het pad:
+Na het starten toont de terminal het lokale adres waarop de API draait.
+
+### 5. API testen
+
+Voor het testen van de endpoints gebruik ik Swagger UI via het NuGet-pakket `Swashbuckle.AspNetCore`.
+
+Wanneer Swagger UI geconfigureerd en ingeschakeld is, is deze bereikbaar via:
 
 ```text
-/swagger
+https://localhost:<poort>/swagger
 ```
 
-Dit geldt wanneer Swagger UI is geconfigureerd en ingeschakeld voor de ontwikkelomgeving.
+Hiermee kan ik de endpoints uitvoeren en controleren of de juiste gegevens en HTTP-statuscodes worden teruggegeven.
 
 ## Mijn werkwijze
 
-Ik werk tijdens de ontwikkeling in kleine stappen. Hierdoor kan ik makkelijker controleren of alles werkt en problemen sneller terugvinden.
+Ik probeer tijdens de ontwikkeling in kleine stappen te werken. Hierdoor kan ik beter bijhouden wat ik aan het doen ben en raak ik minder snel het overzicht kwijt.
 
-Mijn aanpak:
+Ik gebruik hiervoor Trello en GitHub.
 
-1. **Voorbereiden:** eerst bekijken wat ik moet maken en welke eisen daarbij horen.
-2. **Uitwerken:** één onderdeel tegelijk ontwikkelen, zodat het overzichtelijk blijft.
-3. **Testen:** controleren of de functionaliteit doet wat ik verwacht.
-4. **Verbeteren:** fouten oplossen en de code waar nodig overzichtelijker maken.
-5. **Committen:** afgeronde wijzigingen vastleggen in Git.
-6. **Documenteren:** belangrijke keuzes, bronnen en uitgevoerde tests bijhouden.
+### Planning met Trello
 
-Ik probeer niet alles tegelijk te bouwen. Eerst zorg ik dat de basis goed werkt, daarna breid ik deze verder uit.
+Ik heb mijn WPFW-opdracht opgedeeld in kleinere taken. Hiervoor heb ik ChatGPT gebruikt om een planning te maken op basis van de opdrachtomschrijving en rubric.
 
-### Git-werkwijze
+De tickets bevatten werkzaamheden, geplande datums en onderdelen die ik moet controleren.
 
-Ik gebruik GitHub om mijn wijzigingen bij te houden. Ik maak commits wanneer ik een onderdeel heb afgerond of een duidelijke wijziging heb gemaakt.
-Voor mijn commits gebruik ik zoveel mogelijk vaste namen:
+Ik gebruik mijn bestaande Trello-bord en werk met:
+
+- **ToDo:** taken waar ik nog aan moet beginnen.
+- **Doing:** taken waar ik mee bezig ben.
+- **Done:** taken die ik heb afgerond.
+
+De planning kan veranderen wanneer een onderdeel langer duurt dan verwacht.
+
+### Git en commits
+
+Ik gebruik Git om mijn wijzigingen bij te houden.
+
+Mijn bedoeling is om commits te maken wanneer ik een onderdeel heb afgerond of een duidelijke wijziging heb aangebracht.
+
+Ik gebruik hierbij de volgende commitbenamingen:
 
 | Type | Betekenis |
 |---|---|
 | `feat:` | Nieuwe functionaliteit |
-| `fix:` | Fout opgelost |
-| `refactor:` | Code verbeterd zonder nieuwe functionaliteit |
-| `docs:` | Documentatie aangepast |
-| `chore:` | Onderhoud of configuratie |
-| `test:` | Tests toegevoegd of gewijzigd |
+| `fix:` | Een fout opgelost |
+| `refactor:` | Code verbeterd |
+| `docs:` | Documentatie |
+| `chore:` | Configuratie of onderhoud |
+| `test:` | Tests toegevoegd of aangepast |
 
-Ik controleer mijn wijzigingen voordat ik commit en probeer commits klein en duidelijk te houden.
+Een voorbeeld:
 
-## AI-verantwoording
+```bash
+git status
+git add .
+git commit -m "feat: add projects controller"
+git push origin master
+```
 
-Tijdens dit project gebruik ik AI als hulpmiddel bij het leren en plannen.
-Ik heb ChatGPT gebruikt voor het opzetten van een planning in Trello, het structureren van mijn werkwijze en het voorbereiden van documentatie, waaronder deze README.
-AI kan mij helpen met uitleg en ideeën wanneer ik iets niet begrijp. De technische keuzes, implementatie en controle van mijn werk voer ik zelf uit.
-Ik houd mij hierbij aan AIAS-niveau 2 van de opdracht. AI-codeaanvulling gebruik ik niet. Eventueel AI-gebruik wordt per bewijsstuk verder verantwoord in Boulder, inclusief het doel en mijn eigen controle.
+Ik controleer welke bestanden ik commit en probeer mijn wijzigingen duidelijk te omschrijven.
+
+## Veiligheid en configuratie
+
+Bij het ontwikkelen wil ik voorkomen dat gevoelige gegevens in mijn repository terechtkomen.
+
+Daarom gebruik ik een `.gitignore` voor lokale instellingen, tijdelijke bestanden en andere bestanden die niet op GitHub hoeven te staan.
+
+Voor databasewachtwoorden en andere geheimen gebruik ik lokale configuratie zoals .NET User Secrets.
+
+Ook houd ik rekening met het verschil tussen configuratiegeheimen en wachtwoorden van gebruikers. Als ik later authenticatie toevoeg, moeten gebruikerswachtwoorden veilig worden gehasht.
+
+## AI-gebruik en verantwoording
+
+Voor deze opdracht geldt **AIAS-niveau 2 (AI Planning)**.
+
+Ik gebruik ChatGPT als hulpmiddel bij het plannen, voorbereiden en begrijpen van bepaalde onderwerpen.
+
+Tot nu toe heb ik ChatGPT onder andere gebruikt voor:
+
+- Het maken en aanpassen van mijn planning.
+- Het aanmaken van tickets in Trello.
+- Uitleg over de projectstructuur.
+- Hulp bij mijn `.gitignore` en Git-commando's.
+- Het bekijken en controleren van mijn GitHub-repository.
+- Uitleg over configuratie en het opslaan van geheime gegevens.
+- Het voorbereiden van documentatie, waaronder deze README.
+
+ChatGPT heeft ook geholpen bij het opstellen van de eerste teksten voor deze documentatie.
+
+De technische uitwerking, keuzes, onderbouwing en het eindresultaat moeten van mijzelf zijn. AI-codeaanvulling gebruik ik niet, omdat dit volgens de opdracht niet is toegestaan.
+
+Ik houd mijn AI-gebruik apart bij, zodat duidelijk is welke hulp ik heb gekregen en wat ik zelf heb gedaan of gecontroleerd.
+
+**[Lees mijn uitgebreide AI-verantwoording](docs/AI_GEBRUIK.md)**
+
+Mijn procesverantwoording, feedback en werkelijk bestede uren worden daarnaast in Boulder bijgehouden.
 
 ## Bronnen
 
 - [Microsoft Learn – ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/)
 - [Microsoft Learn – Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [Microsoft Learn – C#](https://learn.microsoft.com/en-us/dotnet/csharp/)
+- [Microsoft Learn – .NET User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 - Lesmateriaal WPFW – De Haagse Hogeschool
 
 ## Auteur
 
-**Teun Hanssen**  
+**Teun Hanssen**
+
 HBO-ICT – Software Engineering  
 De Haagse Hogeschool
 
-GitHub: [TeunHSytrius](https://github.com/TeunHSytrius)
+[GitHub-profiel](https://github.com/TeunHSytrius)
 
 ---
 
@@ -195,11 +327,19 @@ GitHub: [TeunHSytrius](https://github.com/TeunHSytrius)
 
 ## About the project
 
-PortfolioWPFWApi is a backend for my personal portfolio website. I am developing this project as part of the WPFW course in the HBO-ICT Software Engineering programme at The Hague University of Applied Sciences.
+PortfolioWPFWApi is the backend for my personal portfolio website.
 
-The goal is to build a REST API for managing projects and blog posts using ASP.NET Core, Entity Framework Core and Microsoft SQL Server.
+I am developing this project for WPFW Assignment 3 as part of the HBO-ICT Software Engineering programme at The Hague University of Applied Sciences.
 
-The main focus is on building a structured backend, separating responsibilities and working with a relational database.
+The goal is to build a REST API for managing my projects and blog posts.
+
+The application uses ASP.NET Core Web API, Entity Framework Core and Microsoft SQL Server.
+
+During this assignment, I focus on learning how to structure a backend, separate responsibilities and work with a relational database.
+
+The frontend of my portfolio is maintained in a separate repository:
+
+[Portfolio website](https://github.com/TeunHSytrius/TeunHSytrius.github.io)
 
 ## Technologies
 
@@ -207,82 +347,89 @@ The main focus is on building a structured backend, separating responsibilities 
 |---|---|
 | C# | Programming language |
 | .NET 10 | Framework |
-| ASP.NET Core Web API | REST API |
-| Entity Framework Core | Database access |
-| Microsoft SQL Server | Database |
-| Swagger UI | API documentation and testing |
+| ASP.NET Core Web API | Backend and REST API |
+| Entity Framework Core | Database communication |
+| Microsoft SQL Server | Data storage |
+| Swagger UI | API testing |
 | JetBrains Rider | Development environment |
-| Git & GitHub | Version control |
+| Git and GitHub | Version control |
+| Trello | Planning and task management |
 
 ## Features
 
 The API is designed to manage two parts of my portfolio.
 
-**Projects**
-- Retrieve all projects.
-- Retrieve a project by ID.
-- Create a project.
-- Update an existing project.
-- Delete a project.
+### Projects
 
-**Blog posts**
-- Retrieve all blog posts.
-- Retrieve a blog post by ID.
-- Create a blog post.
-- Update an existing blog post.
-- Delete a blog post.
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/projects` | Retrieve all projects |
+| GET | `/api/projects/{id}` | Retrieve a project by ID |
+| POST | `/api/projects` | Create a project |
+| PUT | `/api/projects/{id}` | Update a project |
+| DELETE | `/api/projects/{id}` | Delete a project |
 
-DTOs are used to exchange data through the API. Entity Framework Core handles database operations.
+### Blog posts
 
-## Architecture
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/blogposts` | Retrieve all blog posts |
+| GET | `/api/blogposts/{id}` | Retrieve a blog post by ID |
+| POST | `/api/blogposts` | Create a blog post |
+| PUT | `/api/blogposts/{id}` | Update a blog post |
+| DELETE | `/api/blogposts/{id}` | Delete a blog post |
 
-I use a layered structure to keep the code organised and responsibilities separated.
+These are the planned API endpoints. Their implementation and behaviour are verified during development.
 
-```text
-PortfolioWPFWApi/
-│
-├── Controllers/     # Handle HTTP requests
-├── Services/        # Application logic
-├── Data/            # Database and DbContext
-├── Models/          # Database entities
-├── DTOs/            # API data transfer objects
-├── Migrations/      # Database migrations
-│
-├── Program.cs       # Application configuration
-└── appsettings.json # General settings
-```
+## Project structure
 
-Controllers receive HTTP requests and call the appropriate services. Services handle application logic and use Entity Framework Core for database access.
+I use a layered structure to separate responsibilities within the application.
 
-This makes the application easier to understand and maintain.
+| Folder | Responsibility |
+|---|---|
+| `Controllers/` | Handle HTTP requests and responses |
+| `Services/` | Contain application logic |
+| `Data/` | Database configuration and DbContext |
+| `Models/` | Database entities |
+| `DTOs/` | API input and output models |
+| `Migrations/` | EF Core database migrations, if used |
+| `docs/` | Additional documentation |
+
+I chose this structure because I want to keep my controllers focused on HTTP handling instead of putting all the logic in one place.
+
+Services handle application logic, while Entity Framework Core is used for database access.
+
+DTOs are used to control which data is received and returned by the API.
+
+The folder structure is implemented step by step during development.
 
 ## Installation
 
 ### Requirements
 
 - .NET 10 SDK
-- Microsoft SQL Server
+- Microsoft SQL Server or SQL Server Express
 - JetBrains Rider or Visual Studio
 - Git
 
-### Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/TeunHSytrius/PortfolioWPFWApi.git
 cd PortfolioWPFWApi
 ```
 
-### Restore dependencies
+### 2. Restore dependencies
 
 ```bash
 dotnet restore
 ```
 
-### Database configuration
+### 3. Configure the database
 
-Database credentials and other sensitive settings are kept outside the GitHub repository.
+The project uses Microsoft SQL Server.
 
-For local development, .NET User Secrets are used to store the connection string.
+For local development, sensitive configuration is stored using .NET User Secrets.
 
 Navigate to the project directory:
 
@@ -290,82 +437,125 @@ Navigate to the project directory:
 cd PortfolioWPFWApi
 ```
 
-Example connection string for SQL Server Express with Windows authentication:
+If User Secrets have not been configured:
 
 ```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost\SQLEXPRESS;Database=PortfolioWPFW;Trusted_Connection=True;TrustServerCertificate=True;"
+dotnet user-secrets init
 ```
 
-Database creation and migrations are handled through the chosen Entity Framework Core configuration.
+Example for SQL Server Express using Windows authentication:
 
-### Run the application
+```powershell
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=.\SQLEXPRESS;Database=PortfolioWPFW;Trusted_Connection=True;TrustServerCertificate=True;'
+```
 
-From the project directory:
+The server name may need to be changed depending on your local SQL Server installation.
+
+Database creation instructions using EF Core migrations or `EnsureCreated` will be added once the database setup is implemented.
+
+### 4. Run the application
 
 ```bash
 dotnet run
 ```
 
-When Swagger UI is configured and enabled for development, the API can be tested at:
+### 5. Test the API
+
+Once Swagger UI is configured and enabled, the API can be tested at:
 
 ```text
-/swagger
+https://localhost:<port>/swagger
 ```
+
+Swagger is used to test the CRUD endpoints and their HTTP responses.
 
 ## Development workflow
 
-I work in small steps to keep the development process clear and manageable.
+I work in small steps so I can keep track of my progress and understand what I am building.
 
-My approach consists of:
+I use Trello to organise my tasks and GitHub for version control.
 
-1. **Prepare:** understand the requirements before starting.
-2. **Develop:** implement one feature at a time.
-3. **Test:** verify that the functionality works as expected.
-4. **Improve:** fix errors and improve code structure.
-5. **Commit:** save completed changes using Git.
-6. **Document:** keep track of important decisions, sources and tests.
+My workflow consists of:
 
-I focus on getting the basic functionality working before adding extra features.
+1. Reading the requirements before starting.
+2. Planning the work in Trello.
+3. Developing one part at a time.
+4. Testing the functionality.
+5. Fixing problems and improving the code.
+6. Committing completed changes.
+7. Documenting important decisions and feedback.
 
 ### Git workflow
 
-I use GitHub to track changes throughout development.
-
-I follow simple commit naming conventions:
+I use descriptive commit messages.
 
 | Type | Purpose |
 |---|---|
-| `feat:` | New feature |
+| `feat:` | New functionality |
 | `fix:` | Bug fix |
-| `refactor:` | Code improvement |
+| `refactor:` | Code improvements |
 | `docs:` | Documentation |
 | `chore:` | Maintenance or configuration |
 | `test:` | Tests |
 
+Example:
 
-I review my changes before committing and try to keep commits small and meaningful.
+```bash
+git status
+git add .
+git commit -m "feat: add projects controller"
+git push origin master
+```
 
-## AI usage
+I review my changes before committing them.
 
-During this project, I use AI as a supporting tool for learning and planning.
+## Security and configuration
 
-I have used ChatGPT to help structure my Trello planning, organise my workflow and prepare documentation, including this README.
+I use a `.gitignore` to exclude unnecessary local files and sensitive configuration from version control.
 
-AI may help me understand concepts and explore ideas. The technical decisions, implementation and verification of my work remain my own responsibility.
+Database credentials and other secrets should not be committed to GitHub.
 
-I follow the assignment's AIAS Level 2 guidelines and do not use AI code completion. Any additional AI usage is documented per evidence item in Boulder, including its purpose and my own verification.
+For local development, I use .NET User Secrets. User authentication may be added as a separate feature later.
+
+## AI usage and documentation
+
+This assignment follows **AIAS Level 2 (AI Planning)**.
+
+I use ChatGPT as a supporting tool for planning, preparation and understanding technical concepts.
+
+So far, I have used ChatGPT to help with:
+
+- Creating and adjusting my project planning.
+- Creating Trello tasks and checklists.
+- Understanding possible project structures.
+- Preparing my `.gitignore` and understanding Git commands.
+- Reviewing my GitHub repository.
+- Learning about local configuration and secrets.
+- Preparing documentation, including this README.
+
+ChatGPT also helped prepare the initial drafts of the documentation.
+
+The technical implementation, decisions, justification and final result remain my own responsibility. AI code completion is not used because it is not allowed for this assignment.
+
+I keep a separate document explaining how I have used AI and what I have done or verified myself.
+
+**[Read my AI usage documentation (Dutch)](docs/AI_GEBRUIK.md)**
+
+Additional process documentation, feedback and actual study hours are recorded in Boulder.
 
 ## References
 
 - [Microsoft Learn – ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/)
 - [Microsoft Learn – Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [Microsoft Learn – C#](https://learn.microsoft.com/en-us/dotnet/csharp/)
+- [Microsoft Learn – .NET User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 - WPFW course materials – The Hague University of Applied Sciences
 
 ## Author
 
-**Teun Hanssen**  
+**Teun Hanssen**
+
 HBO-ICT – Software Engineering  
 The Hague University of Applied Sciences
 
-GitHub: [TeunHSytrius](https://github.com/TeunHSytrius)
+[GitHub profile](https://github.com/TeunHSytrius)
