@@ -79,6 +79,8 @@ ChatGPT heeft geholpen met het verdelen en aanmaken van de taken. De planning ge
 
 De planning is een hulpmiddel. Als iets langer duurt of anders loopt, moet ik deze zelf aanpassen.
 
+Later heb ik voor WPFW ook GitHub Projects gekozen, omdat ik daar de werkzaamheden direct naast mijn code kan bijhouden. Trello houd ik nog voor mijn algemene studieplanning en Databases.
+
 ### 3.2 GitHub en Rider opzetten
 
 Voor WPFW Opdracht 3 heb ik zelf een GitHub-repository aangemaakt:
@@ -167,6 +169,32 @@ Ik heb aangegeven wat ik in de documenten wilde hebben en welke onderdelen ik an
 
 De teksten zijn met hulp van ChatGPT voorbereid. Ik moet zelf controleren of alles klopt en de uiteindelijke tekst aanpassen aan mijn eigen werk en ervaringen.
 
+### 3.6 GitHub Issues en GitHub Projects
+
+Na het opzetten van de repository wilde ik mijn WPFW-tickets ook in GitHub bijhouden. In Trello had ik al een planning, maar voor dit project vond ik het handiger om taken en code bij elkaar te zetten.
+
+Ik heb ChatGPT gevraagd of GitHub Projects hiervoor geschikt was en om realistische tickets te maken. ChatGPT heeft daarna **17 GitHub Issues** aangemaakt met taken, acceptatiecriteria, een tijdsinschatting en verwijzingen naar de rubric.
+
+Ik heb zelf het GitHub Project-bord gemaakt en de issues daaraan gekoppeld. Daarna heb ik gevraagd om de tickets duidelijker in te delen. ChatGPT heeft de issuebeschrijvingen aangevuld met prioriteiten en afhankelijkheden. Ook heeft ChatGPT de labels `P0`, `P1` en fase-labels toegevoegd.
+
+Ik heb daarnaast gevraagd of ChatGPT de tickets naar de juiste kolommen kon verplaatsen. Dat kon niet rechtstreeks via de koppeling; ik moet de statussen van het projectbord dus zelf beheren.
+
+**Wat heb ik zelf gedaan?**
+
+Ik heb zelf besloten om voor WPFW GitHub Projects te gebruiken, het bord aangemaakt en de issues gekoppeld. ChatGPT heeft de eerste inhoud en ordening van de tickets gemaakt. Ik moet zelf beoordelen of de volgorde haalbaar is en pas een ticket op Done zetten als ik de uitvoering heb gecontroleerd.
+
+De GitHub-tickets zijn een planning en geen bewijs dat de API al gebouwd is.
+
+### 3.7 Feedback op de repository verwerken
+
+Ik heb ChatGPT later gevraagd om een eerlijke beoordeling van mijn repository. Hierbij kreeg ik onder andere terug dat mijn documentatie vooruitliep op mijn daadwerkelijke code, dat de AI-verantwoordingslink niet klopte en dat mijn README nog over Trello sprak terwijl ik inmiddels GitHub Projects gebruikte.
+
+Ik heb ChatGPT gevraagd om deze documentatiefouten te verbeteren. ChatGPT heeft hiervoor de README en dit AI-document rechtstreeks via GitHub aangepast. De daadwerkelijke API-code is daarbij niet aangepast.
+
+**Wat moet ik zelf nog controleren?**
+
+Of de aangepaste tekst klopt met mijn manier van werken en of ik de technische onderdelen straks zelf kan uitvoeren en uitleggen. Ik neem de conceptteksten niet automatisch over als een bewijs van eigen werk.
+
 ---
 
 ## 4. Welke keuzes heb ik gemaakt?
@@ -205,13 +233,13 @@ Het voordeel is dat ik met C#-objecten kan werken en de database via Entity Fram
 
 De precieze uitwerking en de keuze voor bijvoorbeeld migrations of EnsureCreated moet ik nog maken en uitleggen.
 
-### 4.5 Git en Trello
+### 4.5 Git, GitHub Projects en Trello
 
-Ik gebruik GitHub voor mijn versiebeheer en Trello voor het plannen van werkzaamheden.
+Ik gebruik GitHub voor versiebeheer en GitHub Projects voor de ontwikkeltaken van WPFW. Trello gebruik ik nog voor mijn algemene studieplanning en Databases.
 
-Mijn bedoeling is om na afgeronde onderdelen een commit te maken.
+Ik heb GitHub Projects gekozen omdat ik mijn issues kan koppelen aan de repository en later aan commits. Ik wil hiermee terugzien wat ik heb veranderd en aan welke taak ik werkte.
 
-Ik wil hiermee kunnen terugzien wat ik heb veranderd en hoe het project is opgebouwd.
+Ik wil commits maken na afgeronde onderdelen. De opdracht vraagt minimaal zes commits verspreid over drie weken. Ik moet hierbij dus ook op de spreiding letten.
 
 ---
 
@@ -248,11 +276,13 @@ Daarom houd ik naast de algemene uitleg ook een overzicht bij.
 |---|---|---|---|
 | Planning | ChatGPT | Planning gemaakt op basis van de opdracht en rubric. | Aangegeven wat al klaar was en de planning laten aanpassen. |
 | Trello | ChatGPT | Tickets en checklists aangemaakt. | Het bestaande bord gekozen en de planning gebruiken voor mijn eigen werk. |
+| GitHub Issues en Projects | ChatGPT | 17 issues aangemaakt, beschrijvingen aangevuld en P0/P1- en fase-labels toegevoegd. | Zelf het projectbord gemaakt, issues gekoppeld en verantwoordelijk voor status en uitvoering. |
+| Repositoryfeedback | ChatGPT | Feedback op de huidige repository en documentatie, inclusief rechtstreekse aanpassing van de README en dit document. | Wijzigingen nalopen en controleren of de beschrijving overeenkomt met mijn eigen werk. |
 | Projectsetup | ChatGPT | Screenshots en projectstructuur besproken. | Project en repository zelf aangemaakt in Rider/GitHub. |
 | Gitignore | ChatGPT | Voorstel voor .gitignore en uitleg over Git-commando's. | Bestand toegevoegd en repository opnieuw laten controleren. |
 | Configuratie | ChatGPT | Uitleg over User Secrets, .env en wachtwoorden. | Nog toepassen waar nodig tijdens de ontwikkeling. |
-| README | ChatGPT | Concept voor projectdocumentatie. | Inhoud en gewenste indeling aangegeven; definitieve controle en aanpassing nodig. |
-| AI-verantwoording | ChatGPT | Concept voor dit document gemaakt op basis van eerdere gesprekken. | Feiten controleren, aanpassen in eigen woorden en tijdens de opdracht aanvullen. |
+| README | ChatGPT | Concept voor projectdocumentatie en latere verbeteringen in de repository. | Inhoud en gewenste indeling aangegeven; de tekst zelf controleren en aanpassen waar nodig. |
+| AI-verantwoording | ChatGPT | Concept voor dit document gemaakt en later aangevuld met mijn GitHub-werkwijze en repositoryfeedback. | Feiten controleren, aanpassen in eigen woorden en tijdens de opdracht aanvullen. |
 
 **Let op:** Dit overzicht gaat over mijn voorbereiding en het AI-gebruik dat tot nu toe besproken is.
 
