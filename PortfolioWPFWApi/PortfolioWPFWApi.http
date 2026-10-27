@@ -1,0 +1,6 @@
+@PortfolioWPFWApi_HostAddress = http://localhost:5167
+
+GET {{PortfolioWPFWApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

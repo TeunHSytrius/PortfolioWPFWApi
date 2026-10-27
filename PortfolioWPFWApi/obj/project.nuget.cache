@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "F7zWz6gzDhc=",
+  "success": true,
+  "projectFilePath": "C:\\Programmeren\\School\\API\\PortfolioWPFWApi\\PortfolioWPFWApi\\PortfolioWPFWApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Gebruiker\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "C:\\Users\\Gebruiker\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512",
+    "C:\\Users\\Gebruiker\\.nuget\\packages\\system.text.json\\8.0.5\\system.text.json.8.0.5.nupkg.sha512"
+  ],
+  "logs": []
+}
