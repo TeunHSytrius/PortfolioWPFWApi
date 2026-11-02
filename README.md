@@ -1,4 +1,3 @@
-
 # PortfolioWPFWApi
 
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white)
@@ -32,18 +31,18 @@ De repository bevat de backend. Mijn portfoliosite zelf staat in een aparte repo
 
 Voor dit project gebruik ik of wil ik de volgende technologieën gebruiken:
 
-| Technologie | Gebruik |
-|---|---|
-| C# | Programmeertaal |
-| .NET 10 | Framework |
-| ASP.NET Core Web API | Backend en REST API |
-| Entity Framework Core | Communicatie met de database |
-| Microsoft SQL Server | Opslaan van gegevens |
-| Swagger UI | Testen van API-endpoints |
-| JetBrains Rider | Ontwikkelomgeving |
-| Git en GitHub | Versiebeheer |
-| GitHub Projects | Planning en tickets voor WPFW |
-| Trello | Algemene studieplanning en Databases |
+| Technologie           | Gebruik                              |
+| --------------------- | ------------------------------------ |
+| C#                    | Programmeertaal                      |
+| .NET 10               | Framework                            |
+| ASP.NET Core Web API  | Backend en REST API                  |
+| Entity Framework Core | Communicatie met de database         |
+| Microsoft SQL Server  | Opslaan van gegevens                 |
+| Swagger UI            | Testen van API-endpoints             |
+| JetBrains Rider       | Ontwikkelomgeving                    |
+| Git en GitHub         | Versiebeheer                         |
+| GitHub Projects       | Planning en tickets voor WPFW        |
+| Trello                | Algemene studieplanning en Databases |
 
 ## Functionaliteiten
 
@@ -53,25 +52,25 @@ De API wordt ontwikkeld voor twee onderdelen van mijn portfolio.
 
 Met de API wil ik de volgende acties ondersteunen:
 
-| Methode | Endpoint | Functie |
-|---|---|---|
-| GET | `/api/projects` | Alle projecten ophalen |
-| GET | `/api/projects/{id}` | Eén project ophalen |
-| POST | `/api/projects` | Nieuw project toevoegen |
-| PUT | `/api/projects/{id}` | Project aanpassen |
-| DELETE | `/api/projects/{id}` | Project verwijderen |
+| Methode | Endpoint             | Functie                 |
+| ------- | -------------------- | ----------------------- |
+| GET     | `/api/projects`      | Alle projecten ophalen  |
+| GET     | `/api/projects/{id}` | Eén project ophalen     |
+| POST    | `/api/projects`      | Nieuw project toevoegen |
+| PUT     | `/api/projects/{id}` | Project aanpassen       |
+| DELETE  | `/api/projects/{id}` | Project verwijderen     |
 
 Een project bevat onder andere een titel, beschrijving, categorie, GitHub-link en datum.
 
 ### Blogposts
 
-| Methode | Endpoint | Functie |
-|---|---|---|
-| GET | `/api/blogposts` | Alle blogposts ophalen |
-| GET | `/api/blogposts/{id}` | Eén blogpost ophalen |
-| POST | `/api/blogposts` | Nieuwe blogpost toevoegen |
-| PUT | `/api/blogposts/{id}` | Blogpost aanpassen |
-| DELETE | `/api/blogposts/{id}` | Blogpost verwijderen |
+| Methode | Endpoint              | Functie                   |
+| ------- | --------------------- | ------------------------- |
+| GET     | `/api/blogposts`      | Alle blogposts ophalen    |
+| GET     | `/api/blogposts/{id}` | Eén blogpost ophalen      |
+| POST    | `/api/blogposts`      | Nieuwe blogpost toevoegen |
+| PUT     | `/api/blogposts/{id}` | Blogpost aanpassen        |
+| DELETE  | `/api/blogposts/{id}` | Blogpost verwijderen      |
 
 Een blogpost bevat een titel, inhoud en publicatiedatum.
 
@@ -85,48 +84,24 @@ De structuur die ik wil gebruiken:
 
 ```text
 PortfolioWPFWApi/
-│
 ├── .gitignore
 ├── README.md
-├── PortfolioWPFWApi.sln
-│
 ├── Docs/
 │   └── AI_GEBRUIK.md
-│
-└── PortfolioWPFWApi/
-    │
-    ├── Controllers/
-    │   ├── ProjectsController.cs
-    │   └── BlogpostsController.cs
-    │
-    ├── Services/
-    │   ├── ProjectService.cs
-    │   └── BlogpostService.cs
-    │
-    ├── Data/
-    │   └── ApplicationDbContext.cs
-    │
-    ├── Models/
-    │   ├── Project.cs
-    │   └── Blogpost.cs
-    │
-    ├── DTOs/
-    │   ├── Projects/
-    │   │   ├── CreateProjectDto.cs
-    │   │   ├── UpdateProjectDto.cs
-    │   │   └── ProjectDto.cs
-    │   │
-    │   └── Blogposts/
-    │       ├── CreateBlogpostDto.cs
-    │       ├── UpdateBlogpostDto.cs
-    │       └── BlogpostDto.cs
-    │
-    ├── Migrations/
-    ├── Properties/
-    │
-    ├── Program.cs
-    ├── appsettings.json
-    └── PortfolioWPFWApi.csproj
+├── backend/
+│   ├── PortfolioWPFWApi.sln
+│   └── PortfolioWPFWApi/
+│       ├── Controllers/
+│       ├── Services/
+│       ├── Models/
+│       ├── DTOs/
+│       ├── Data/
+│       ├── Properties/
+│       ├── Program.cs
+│       ├── appsettings.json
+│       └── PortfolioWPFWApi.csproj
+└── frontend/
+    └── README.md
 ```
 
 Dit is mijn geplande structuur. Niet alle bestanden hoeven vanaf het begin aanwezig te zijn.
@@ -243,14 +218,14 @@ Mijn bedoeling is om commits te maken wanneer ik een onderdeel heb afgerond of e
 
 Ik gebruik hierbij de volgende commitbenamingen:
 
-| Type | Betekenis |
-|---|---|
-| `feat:` | Nieuwe functionaliteit |
-| `fix:` | Een fout opgelost |
-| `refactor:` | Code verbeterd |
-| `docs:` | Documentatie |
-| `chore:` | Configuratie of onderhoud |
-| `test:` | Tests toegevoegd of aangepast |
+| Type        | Betekenis                     |
+| ----------- | ----------------------------- |
+| `feat:`     | Nieuwe functionaliteit        |
+| `fix:`      | Een fout opgelost             |
+| `refactor:` | Code verbeterd                |
+| `docs:`     | Documentatie                  |
+| `chore:`    | Configuratie of onderhoud     |
+| `test:`     | Tests toegevoegd of aangepast |
 
 Een voorbeeld:
 
@@ -314,7 +289,7 @@ Mijn procesverantwoording, feedback en werkelijk bestede uren worden daarnaast i
 
 **Teun Hanssen**
 
-HBO-ICT – Software Engineering  
+HBO-ICT – Software Engineering
 De Haagse Hogeschool
 
 [GitHub-profiel](https://github.com/TeunHSytrius)
@@ -341,18 +316,18 @@ The frontend of my portfolio is maintained in a separate repository:
 
 ## Technologies
 
-| Technology | Purpose |
-|---|---|
-| C# | Programming language |
-| .NET 10 | Framework |
-| ASP.NET Core Web API | Backend and REST API |
-| Entity Framework Core | Database communication |
-| Microsoft SQL Server | Data storage |
-| Swagger UI | API testing |
-| JetBrains Rider | Development environment |
-| Git and GitHub | Version control |
-| GitHub Projects | WPFW planning and issues |
-| Trello | General study planning and Databases |
+| Technology            | Purpose                              |
+| --------------------- | ------------------------------------ |
+| C#                    | Programming language                 |
+| .NET 10               | Framework                            |
+| ASP.NET Core Web API  | Backend and REST API                 |
+| Entity Framework Core | Database communication               |
+| Microsoft SQL Server  | Data storage                         |
+| Swagger UI            | API testing                          |
+| JetBrains Rider       | Development environment              |
+| Git and GitHub        | Version control                      |
+| GitHub Projects       | WPFW planning and issues             |
+| Trello                | General study planning and Databases |
 
 ## Features
 
@@ -360,23 +335,23 @@ The API is designed to manage two parts of my portfolio.
 
 ### Projects
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/projects` | Retrieve all projects |
-| GET | `/api/projects/{id}` | Retrieve a project by ID |
-| POST | `/api/projects` | Create a project |
-| PUT | `/api/projects/{id}` | Update a project |
-| DELETE | `/api/projects/{id}` | Delete a project |
+| Method | Endpoint             | Description              |
+| ------ | -------------------- | ------------------------ |
+| GET    | `/api/projects`      | Retrieve all projects    |
+| GET    | `/api/projects/{id}` | Retrieve a project by ID |
+| POST   | `/api/projects`      | Create a project         |
+| PUT    | `/api/projects/{id}` | Update a project         |
+| DELETE | `/api/projects/{id}` | Delete a project         |
 
 ### Blog posts
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/blogposts` | Retrieve all blog posts |
-| GET | `/api/blogposts/{id}` | Retrieve a blog post by ID |
-| POST | `/api/blogposts` | Create a blog post |
-| PUT | `/api/blogposts/{id}` | Update a blog post |
-| DELETE | `/api/blogposts/{id}` | Delete a blog post |
+| Method | Endpoint              | Description                |
+| ------ | --------------------- | -------------------------- |
+| GET    | `/api/blogposts`      | Retrieve all blog posts    |
+| GET    | `/api/blogposts/{id}` | Retrieve a blog post by ID |
+| POST   | `/api/blogposts`      | Create a blog post         |
+| PUT    | `/api/blogposts/{id}` | Update a blog post         |
+| DELETE | `/api/blogposts/{id}` | Delete a blog post         |
 
 These are the planned API endpoints. Their implementation and behaviour are verified during development.
 
@@ -384,15 +359,15 @@ These are the planned API endpoints. Their implementation and behaviour are veri
 
 I plan to use a layered structure to separate responsibilities within the application.
 
-| Folder | Responsibility |
-|---|---|
-| `Controllers/` | Handle HTTP requests and responses |
-| `Services/` | Contain application logic |
-| `Data/` | Database configuration and DbContext |
-| `Models/` | Database entities |
-| `DTOs/` | API input and output models |
-| `Migrations/` | EF Core database migrations, if used |
-| `Docs/` | Additional documentation |
+| Folder         | Responsibility                       |
+| -------------- | ------------------------------------ |
+| `Controllers/` | Handle HTTP requests and responses   |
+| `Services/`    | Contain application logic            |
+| `Data/`        | Database configuration and DbContext |
+| `Models/`      | Database entities                    |
+| `DTOs/`        | API input and output models          |
+| `Migrations/`  | EF Core database migrations, if used |
+| `Docs/`        | Additional documentation             |
 
 I chose this structure because I want to keep my controllers focused on HTTP handling instead of putting all the logic in one place.
 
@@ -487,14 +462,14 @@ My workflow consists of:
 
 I use descriptive commit messages.
 
-| Type | Purpose |
-|---|---|
-| `feat:` | New functionality |
-| `fix:` | Bug fix |
-| `refactor:` | Code improvements |
-| `docs:` | Documentation |
-| `chore:` | Maintenance or configuration |
-| `test:` | Tests |
+| Type        | Purpose                      |
+| ----------- | ---------------------------- |
+| `feat:`     | New functionality            |
+| `fix:`      | Bug fix                      |
+| `refactor:` | Code improvements            |
+| `docs:`     | Documentation                |
+| `chore:`    | Maintenance or configuration |
+| `test:`     | Tests                        |
 
 Example:
 
@@ -554,7 +529,7 @@ Additional process documentation, feedback and actual study hours are recorded i
 
 **Teun Hanssen**
 
-HBO-ICT – Software Engineering  
+HBO-ICT – Software Engineering
 The Hague University of Applied Sciences
 
 [GitHub profile](https://github.com/TeunHSytrius)
