@@ -1,6 +1,5 @@
 ﻿namespace PortfolioWPFWApi.Services;
 
-public class ProjectService
-{
+public class ProjectService {
    
 }

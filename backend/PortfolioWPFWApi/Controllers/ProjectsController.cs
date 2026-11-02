@@ -5,7 +5,6 @@ namespace PortfolioWPFWApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProjectsController : ControllerBase
-{
+public class ProjectsController : ControllerBase{
     
 }
