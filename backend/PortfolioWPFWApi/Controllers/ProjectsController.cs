@@ -5,6 +5,12 @@ namespace PortfolioWPFWApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProjectsController : ControllerBase{
-    
+public class ProjectsController : ControllerBase
+{
+    private readonly ProjectService _projectService;
+
+    public ProjectsController(ProjectService projectService)
+    {
+        _projectService = projectService;
+    }
 }
