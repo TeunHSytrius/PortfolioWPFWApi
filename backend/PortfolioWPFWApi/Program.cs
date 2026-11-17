@@ -49,6 +49,36 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles =
+    [
+        AppRoles.Bezoeker,
+        AppRoles.Moderator,
+        AppRoles.Admin
+    ];
+
+    foreach (var role in roles)
+    {
+        if (await roleManager.RoleExistsAsync(role))
+        {
+            continue;
+        }
+
+        var result = await roleManager.CreateAsync(
+            new IdentityRole(role));
+
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(
+                $"Rol '{role}' kon niet worden aangemaakt.");
+        }
+    }
+}
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
