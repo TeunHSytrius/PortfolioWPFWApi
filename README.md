@@ -21,22 +21,23 @@ Voor de database gebruik ik Microsoft SQL Server in combinatie met Entity Framew
 
 Voor opdracht 4 van WPFW heb ik ASP.NET Core Identity toegevoegd. Hiermee kunnen gebruikers een account aanmaken, inloggen en uitloggen. Ook heb ik autorisatie toegevoegd, zodat niet iedere gebruiker gegevens kan aanpassen.
 
-De backend bevat daarnaast een afzonderlijk xUnit-testproject om de API automatisch te testen.
+Daarnaast bevat de backend een afzonderlijk xUnit-testproject waarmee ik de API via HTTP test.
 
 ### Huidige status
 
-| Onderdeel                           | Status                   |
-| ----------------------------------- | ------------------------ |
-| CRUD voor projecten en blogposts    | Geïmplementeerd          |
-| Entity Framework Core en SQL Server | Geïmplementeerd          |
-| ASP.NET Core Identity               | Geïmplementeerd          |
-| Registratie, login en logout        | Geïmplementeerd          |
-| Cookie-authenticatie                | Geïmplementeerd          |
-| Rollen en autorisatie               | Geïmplementeerd          |
-| Invoervalidatie                     | Geïmplementeerd          |
-| xUnit-tests                         | 38 testgevallen aanwezig |
-| Blogreacties en moderatie           | Gepland                  |
-| React-frontend                      | Nog niet gebouwd         |
+| Onderdeel                           | Status                |
+| ----------------------------------- | --------------------- |
+| CRUD voor projecten en blogposts    | Geïmplementeerd       |
+| Entity Framework Core en SQL Server | Geïmplementeerd       |
+| ASP.NET Core Identity               | Geïmplementeerd       |
+| Registratie, login en logout        | Geïmplementeerd       |
+| Cookie-authenticatie                | Geïmplementeerd       |
+| Rollen en autorisatie               | Geïmplementeerd       |
+| Invoervalidatie                     | Geïmplementeerd       |
+| xUnit-tests                         | 38 van 38 geslaagd    |
+| Code coverage                       | Gemeten en onderbouwd |
+| Blogreacties en moderatie           | Gepland               |
+| React-frontend                      | Nog niet gebouwd      |
 
 ---
 
@@ -77,15 +78,15 @@ De API heeft endpoints voor projecten, blogposts en gebruikersaccounts.
 
 De API gebruikt onder andere de volgende statuscodes:
 
-| Statuscode         | Betekenis                                              |
-| ------------------ | ------------------------------------------------------ |
-| `200 OK`           | Verzoek succesvol uitgevoerd                           |
-| `201 Created`      | Nieuw account of record aangemaakt                     |
-| `204 No Content`   | Record gewijzigd of verwijderd, of gebruiker uitgelogd |
-| `400 Bad Request`  | Ongeldige invoer                                       |
-| `401 Unauthorized` | Gebruiker is niet ingelogd                             |
-| `403 Forbidden`    | Gebruiker heeft onvoldoende rechten                    |
-| `404 Not Found`    | Het opgevraagde record bestaat niet                    |
+| Statuscode         | Betekenis                                                    |
+| ------------------ | ------------------------------------------------------------ |
+| `200 OK`           | Verzoek succesvol uitgevoerd                                 |
+| `201 Created`      | Nieuw account of record aangemaakt                           |
+| `204 No Content`   | Record gewijzigd of verwijderd, of gebruiker uitgelogd       |
+| `400 Bad Request`  | Ongeldige invoer                                             |
+| `401 Unauthorized` | Gebruiker is niet aangemeld of heeft ongeldige inloggegevens |
+| `403 Forbidden`    | Gebruiker heeft onvoldoende rechten                          |
+| `404 Not Found`    | Het opgevraagde record bestaat niet                          |
 
 ---
 
@@ -230,7 +231,7 @@ De connectionstring wordt opgehaald met:
 
 Ik gebruik .NET User Secrets om de lokale connectionstring buiten de repository te bewaren.
 
-Stel de connectionstring in met:
+Stel de connectionstring in vanuit de map `backend/PortfolioWPFWApi`:
 
 ```powershell
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "<JOUW_CONNECTIONSTRING>"
@@ -240,7 +241,7 @@ Vervang de placeholder door de connectionstring van je eigen SQL Server-database
 
 In de connectionstring staan onder andere de servernaam, databasenaam en authenticatie-instellingen.
 
-**Let op:** sla geen wachtwoorden, connectionstrings met gevoelige gegevens of API-sleutels op in GitHub. User Secrets voorkomt dat deze gegevens in de repository staan, maar versleutelt ze lokaal niet.
+**Let op:** sla geen wachtwoorden, gevoelige connectionstrings of API-sleutels op in GitHub. User Secrets voorkomt dat deze gegevens in de repository staan, maar versleutelt ze lokaal niet.
 
 ### 4. Entity Framework Core CLI installeren
 
@@ -256,10 +257,10 @@ Wanneer de tool al aanwezig is, kun je deze stap overslaan.
 
 De repository bevat twee migrations:
 
-| Migration       | Functie                                       |
-| --------------- | --------------------------------------------- |
-| `InitialCreate` | Maakt de tabellen voor projecten en blogposts |
-| `AddIdentity`   | Voegt de Identity-tabellen toe                |
+| Migration                      | Functie                                       |
+| ------------------------------ | --------------------------------------------- |
+| `20261104234333_InitialCreate` | Maakt de tabellen voor projecten en blogposts |
+| `20261105170748_AddIdentity`   | Voegt de Identity-tabellen toe                |
 
 Voer de migrations uit met:
 
@@ -347,6 +348,8 @@ Tijdens development is Swagger beschikbaar op:
 Via Swagger kun je de endpoints bekijken en HTTP-verzoeken uitvoeren.
 
 Swagger is alleen ingeschakeld in de Development-omgeving.
+
+Voor het testen van de Identity-cookie gebruik ik het HTTPS-adres.
 
 ---
 
@@ -438,15 +441,15 @@ Bij verkeerde inloggegevens geeft de API `401 Unauthorized` terug.
 
 De authenticatiecookie is als volgt ingesteld:
 
-- HTTP-only.
-- Alleen via HTTPS.
-- `SameSite=Lax`.
+- `HttpOnly = true`
+- `SecurePolicy = Always`
+- `SameSite = Lax`
 - Een geldigheidsduur van 8 uur.
 - Sliding expiration.
 
-De cookie wordt gebruikt om te herkennen welke gebruiker een verzoek uitvoert.
+Door `HttpOnly` is de cookie niet rechtstreeks uit te lezen via JavaScript. Door `SecurePolicy = Always` wordt de cookie alleen via HTTPS meegestuurd.
 
-Bij beveiligde endpoints controleert de API daarna of de gebruiker voldoende rechten heeft.
+De cookie wordt gebruikt om te herkennen welke gebruiker een verzoek uitvoert. Bij beveiligde endpoints controleert de API daarna of de gebruiker voldoende rechten heeft.
 
 ### Ingelogde gebruiker ophalen
 
@@ -480,30 +483,37 @@ Nieuwe gebruikers krijgen standaard de rol `Bezoeker`.
 
 Om de schrijfrechten van de API te testen, kan ik een geregistreerd account handmatig de rol `Admin` geven via SQL Server Management Studio.
 
-Hiervoor is geen aparte beheerroute gemaakt.
+Ook kan ik op dezelfde manier de rol `Moderator` toekennen. Hiervoor is geen aparte beheerroute gemaakt.
 
 ### Werkwijze
 
 1. Start de API zodat de rollen beschikbaar zijn.
 2. Registreer een testaccount via `/api/auth/register`.
 3. Open SQL Server Management Studio.
-4. Selecteer de lokale database die door `DefaultConnection` wordt gebruikt.
+4. Selecteer de lokale ontwikkel-database die door `DefaultConnection` wordt gebruikt.
 5. Controleer of je niet de testdatabase `PortfolioWPFW_Test` gebruikt.
 6. Voer het SQL-script hieronder uit.
 7. Log uit en daarna opnieuw in met het testaccount.
-8. Controleer via Swagger of de gebruiker schrijfrechten heeft.
+8. Controleer de rechten via Swagger.
 
 ### SQL-script
 
 Vervang het e-mailadres door dat van het geregistreerde account.
 
+Stel `@RoleName` in op `Admin` of `Moderator`, afhankelijk van de rol die je wilt toekennen.
+
 ```sql
 DECLARE @Email NVARCHAR(256) = N'test@example.com';
+DECLARE @RoleName NVARCHAR(256) = N'Admin';
+
 DECLARE @UserId NVARCHAR(450);
 DECLARE @RoleId NVARCHAR(450);
 
 IF DB_NAME() = N'PortfolioWPFW_Test'
     THROW 50000, 'Gebruik niet de testdatabase.', 1;
+
+IF @RoleName NOT IN (N'Admin', N'Moderator')
+    THROW 50000, 'Ongeldige rol voor lokale toekenning.', 1;
 
 SELECT @UserId = Id
 FROM dbo.AspNetUsers
@@ -511,7 +521,7 @@ WHERE NormalizedEmail = UPPER(@Email);
 
 SELECT @RoleId = Id
 FROM dbo.AspNetRoles
-WHERE NormalizedName = N'ADMIN';
+WHERE NormalizedName = UPPER(@RoleName);
 
 IF @UserId IS NULL OR @RoleId IS NULL
     THROW 50000, 'Gebruiker of rol niet gevonden.', 1;
@@ -520,7 +530,8 @@ IF NOT EXISTS
 (
     SELECT 1
     FROM dbo.AspNetUserRoles
-    WHERE UserId = @UserId AND RoleId = @RoleId
+    WHERE UserId = @UserId
+      AND RoleId = @RoleId
 )
 BEGIN
     INSERT INTO dbo.AspNetUserRoles (UserId, RoleId)
@@ -528,13 +539,11 @@ BEGIN
 END;
 ```
 
-Het script zoekt de gebruiker en de Admin-rol op en koppelt deze aan elkaar.
+Het script zoekt de gebruiker en de gekozen rol op en koppelt deze aan elkaar.
 
-Als het account de Admin-rol al heeft, wordt deze niet opnieuw toegevoegd.
+Als het account de rol al heeft, wordt deze niet opnieuw toegevoegd.
 
 De bestaande Bezoeker-rol hoeft niet te worden verwijderd. Identity ondersteunt meerdere rollen per gebruiker.
-
-Voor het toekennen van de Moderator-rol kan dezelfde procedure worden gebruikt met `MODERATOR` als rolnaam.
 
 **Belangrijk:** na het aanpassen van een rol moet de gebruiker opnieuw inloggen. De bestaande authenticatiecookie kan namelijk nog de oude rolgegevens bevatten.
 
@@ -549,13 +558,15 @@ Voor het toekennen van de Moderator-rol kan dezelfde procedure worden gebruikt m
 
 De backend controleert deze rechten met de ingestelde autorisatiepolicy.
 
+De Moderator-rol heeft op dit moment nog geen aparte beheerfunctie.
+
 ---
 
 ## Testen met Swagger
 
 Swagger kan worden gebruikt om de authenticatie en autorisatie handmatig te controleren.
 
-Een eenvoudige testvolgorde is:
+Een testvolgorde is:
 
 1. Open Swagger via HTTPS.
 2. Registreer een account met `POST /api/auth/register`.
@@ -568,9 +579,13 @@ Een eenvoudige testvolgorde is:
 9. Probeer opnieuw een project aan te maken.
 10. Controleer of de API `201 Created` teruggeeft.
 
-Swagger kent zelf geen rollen toe. De browser stuurt de authenticatiecookie mee en de API bepaalt of het verzoek is toegestaan.
+Swagger kent zelf geen rollen toe. Identity bepaalt wie is ingelogd en de API controleert welke rechten deze gebruiker heeft.
 
-Wanneer de cookie niet wordt meegestuurd, kan de login ook met een HTTP-client zoals Postman worden getest.
+Bij gebruik van Swagger UI op dezelfde HTTPS-origin als de API kan de browser de authenticatiecookie automatisch meesturen.
+
+Met `GET /api/auth/me` kan worden gecontroleerd of de aanmelding daadwerkelijk is behouden.
+
+Wanneer de cookie niet wordt meegestuurd, kan de authenticatie ook met een HTTP-client zoals Postman worden getest.
 
 ---
 
@@ -607,7 +622,22 @@ Ik gebruik `WebApplicationFactory` om de API via HTTP te testen. Hiermee worden 
 | `AuthControllerTests.cs`     |           10 | Registratie, login en logout  |
 | **Totaal**                   |       **38** |                               |
 
-Deze 38 testgevallen staan op de `master`-branch van de repository.
+### Testresultaten
+
+De tests zijn uitgevoerd met `dotnet test` op de solution.
+
+Het laatste testresultaat:
+
+| Onderdeel           |    Resultaat |
+| ------------------- | -----------: |
+| Totaal aantal tests |           38 |
+| Geslaagd            |           38 |
+| Mislukt             |            0 |
+| Overgeslagen        |            0 |
+| Testduur            | 7,2 seconden |
+| Build               |     Geslaagd |
+
+Alle 38 tests zijn succesvol uitgevoerd.
 
 ### Wat wordt getest?
 
@@ -654,7 +684,7 @@ De tests gebruiken een afzonderlijke SQL Server-database:
 
 `PortfolioWPFW_Test`
 
-Hierdoor worden de normale gegevens van de API niet gebruikt voor de tests.
+Hierdoor worden de gewone gegevens van de API niet gebruikt voor de tests.
 
 De testconnectionstring wordt opgeslagen in .NET User Secrets onder:
 
@@ -666,7 +696,7 @@ Stel deze in vanuit de map `backend/PortfolioWPFWApi`:
 dotnet user-secrets set "ConnectionStrings:TestConnection" "<JOUW_TEST_CONNECTIONSTRING>"
 ```
 
-De testdatabase moet vooraf bestaan en de benodigde migrations bevatten.
+De testdatabase moet vooraf bestaan en de benodigde EF Core-migrations bevatten.
 
 De `ApiWebApplicationFactory` gebruikt deze connectionstring in plaats van de normale databaseverbinding.
 
@@ -682,45 +712,104 @@ Voer vanuit de hoofdmap van de repository uit:
 dotnet test backend/PortfolioWPFWApi.sln
 ```
 
-De tests kunnen ook vanuit JetBrains Rider worden uitgevoerd.
-
-### Code coverage
-
-Om de code coverage te meten gebruik ik `coverlet.collector`.
-
-De coverage kan worden verzameld met:
+Wanneer je al in de map `backend` staat, gebruik je:
 
 ```powershell
-dotnet test backend/PortfolioWPFWApi.sln --collect:"XPlat Code Coverage"
+dotnet test PortfolioWPFWApi.sln
 ```
 
-Het rapport wordt opgeslagen onder `TestResults` als `coverage.cobertura.xml`.
+De tests kunnen ook vanuit JetBrains Rider worden uitgevoerd.
 
-#### Eerdere coverage-meting
+---
 
-Bij een eerdere run met 34 tests zijn de volgende resultaten gemeten:
+## Code coverage
 
-| Onderdeel                               | Coverage |
-| --------------------------------------- | -------: |
-| Totale line coverage                    |   29,43% |
-| Totale branch coverage                  |   80,43% |
-| Line coverage zonder EF Core-migrations |   95,91% |
-| ProjectsController                      |     100% |
-| BlogpostsController                     |     100% |
-| ProjectService                          |     100% |
-| BlogpostService                         |     100% |
+Voor het meten van de code coverage gebruik ik `coverlet.collector`.
 
-De totale line coverage is lager doordat de gegenereerde EF Core-migrations en de modelsnapshot worden meegenomen in het rapport.
+Na het uitvoeren van de 38 xUnit-tests heb ik een coverage-rapport gegenereerd met:
 
-Deze bestanden worden tijdens de HTTP-tests niet uitgevoerd, omdat de tests gebruikmaken van een bestaande testdatabase waarop de migrations al moeten zijn toegepast.
+```powershell
+dotnet test PortfolioWPFWApi.sln --collect:"XPlat Code Coverage"
+```
 
-Zonder de gegenereerde migratiebestanden komt de herberekende line coverage uit op 95,91%.
+Dit commando is uitgevoerd vanuit de map `backend`.
 
-Dit percentage is berekend op basis van het eerdere coveragebestand en niet met een aparte gefilterde Coverlet-run.
+Het rapport wordt opgeslagen onder `Tests/TestResults` als `coverage.cobertura.xml`.
 
-De coverage richt zich vooral op de controllers, services en de werking van de API.
+### Coverlet / Cobertura
 
-De genoemde resultaten horen nog bij de eerdere run met 34 tests. De actuele coverage van alle 38 tests moet opnieuw worden gemeten.
+De coverage-meting van de 38 tests geeft de volgende resultaten:
+
+| Onderdeel                               | Line coverage |
+| --------------------------------------- | ------------: |
+| Totale API-code, inclusief migrations   |        29,43% |
+| API-code zonder gegenereerde migrations |        95,91% |
+| ProjectsController                      |          100% |
+| BlogpostsController                     |          100% |
+| ProjectService                          |          100% |
+| BlogpostService                         |          100% |
+| AuthController                          |        89,66% |
+| Program.cs                              |        89,55% |
+
+De totale branch coverage is **80,43%**.
+
+### Onderbouwing van de coverage
+
+De totale line coverage is relatief laag doordat de gegenereerde EF Core-migrations en de modelsnapshot worden meegenomen in de meting.
+
+Het rapport bevat:
+
+| Onderdeel                                | Regels |
+| ---------------------------------------- | -----: |
+| Totaal aantal uitvoerbare regels         |  1.274 |
+| Uitgevoerde regels                       |    375 |
+| Gegenereerde migrations en modelsnapshot |    883 |
+| Overige uitvoerbare regels               |    391 |
+
+De gegenereerde migrations worden tijdens de HTTP-tests niet uitgevoerd, omdat ik gebruikmaak van een bestaande testdatabase waarop de migrations al moeten zijn toegepast.
+
+Wanneer ik de gegenereerde bestanden buiten de berekening laat, komt de line coverage uit op:
+
+```text
+375 / 391 × 100 = 95,91%
+```
+
+Dit percentage is herberekend op basis van het Cobertura-rapport. Het is dus geen resultaat van een afzonderlijke Coverlet-run met filtering.
+
+De controllers en services voor Projects en Blogposts hebben allemaal 100% line coverage.
+
+Dat betekent dat alle uitvoerbare regels in deze onderdelen tijdens de tests zijn geraakt. Het betekent niet automatisch dat iedere mogelijke invoer of situatie is getest. Daarom controleren de tests ook statuscodes, responsegegevens en het effect van CRUD-bewerkingen.
+
+### JetBrains Rider Test Coverage
+
+Naast Coverlet heb ik de ingebouwde .NET Test Coverage van JetBrains Rider gebruikt.
+
+Rider geeft de volgende resultaten:
+
+| Onderdeel                     | Coverage |
+| ----------------------------- | -------: |
+| Totaal, inclusief testproject |      66% |
+| API-project                   |      49% |
+| Controllers                   |      93% |
+| Services                      |     100% |
+| DTO's                         |     100% |
+| Data                          |     100% |
+| Models                        |      93% |
+| Program.cs                    |      90% |
+| Testproject                   |      97% |
+| Migrations                    |       0% |
+
+De percentages van Rider zijn niet direct vergelijkbaar met die van Cobertura. Rider toont statement coverage en neemt in deze weergave ook het testproject mee. Cobertura rapporteert onder andere line coverage en branch coverage.
+
+Beide metingen laten zien dat de CRUD-functionaliteit goed wordt gedekt. De gegenereerde migrations hebben vooral invloed op het totale percentage.
+
+### Conclusie van de tests
+
+Alle 38 xUnit-tests zijn geslaagd.
+
+De tests controleren de CRUD-routes, authenticatie, autorisatie, ongeldige invoer en het effect van databasebewerkingen.
+
+Met de coverage-rapporten kan ik onderbouwen welke onderdelen van de API worden uitgevoerd tijdens de tests en waarom de totale coverage lager is dan de dekking van de controllers en services.
 
 ---
 
@@ -737,7 +826,7 @@ De volgende onderdelen kunnen nog worden toegevoegd:
 - Aanvullende CORS- en cookieconfiguratie wanneer de frontend vanaf een andere origin draait.
 - Pagination voor grotere hoeveelheden gegevens.
 
-De huidige opdracht richt zich op de backend. De React-frontend en deployment worden nog niet uitgewerkt.
+De huidige opdracht richt zich op de backend. De React-frontend en deployment zijn nog niet uitgewerkt.
 
 ---
 
