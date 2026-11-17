@@ -8,17 +8,15 @@ using PortfolioWPFWApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<BlogpostService>();
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
         ?? throw new InvalidOperationException("DefaultConnection ontbreekt.")));
-
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
@@ -28,7 +26,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -37,27 +34,48 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 });
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(AuthorizationPolicies.CanManageContent, policy =>
         policy.RequireRole(AppRoles.Admin));
-
     options.AddPolicy(AuthorizationPolicies.CanModerateComments, policy =>
         policy.RequireRole(AppRoles.Moderator, AppRoles.Admin));
 });
-
 var app = builder.Build();
-
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles =
+    [
+        AppRoles.Bezoeker,
+        AppRoles.Moderator,
+        AppRoles.Admin
+    ];
+    foreach (var role in roles)
+    {
+        if (await roleManager.RoleExistsAsync(role))
+        {
+            continue;
+        }
+        var result = await roleManager.CreateAsync(
+            new IdentityRole(role));
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(
+                $"Rol '{role}' kon niet worden aangemaakt.");
+        }
+    }
+}
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+public partial class Program { }
