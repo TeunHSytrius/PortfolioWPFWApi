@@ -29,11 +29,12 @@ public class BlogpostsControllerTests : IAsyncLifetime
         // Act
         using var response = await client.GetAsync("/api/Blogposts");
 
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         var blogposts = await response.Content
             .ReadFromJsonAsync<List<BlogpostDto>>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(blogposts);
         Assert.Contains(blogposts, blogpost => blogpost.Id == blogpostId);
     }
@@ -49,11 +50,12 @@ public class BlogpostsControllerTests : IAsyncLifetime
         using var response = await client.GetAsync(
             $"/api/Blogposts/{blogpostId}");
 
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         var blogpost = await response.Content
             .ReadFromJsonAsync<BlogpostDto>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(blogpost);
         Assert.Equal(blogpostId, blogpost.Id);
     }
@@ -82,13 +84,27 @@ public class BlogpostsControllerTests : IAsyncLifetime
         using var response = await client.PostAsJsonAsync(
             "/api/Blogposts", newBlogpost);
 
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
         var createdBlogpost = await response.Content
             .ReadFromJsonAsync<BlogpostDto>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(createdBlogpost);
         Assert.Equal(newBlogpost.Title, createdBlogpost.Title);
+
+        using var getResponse = await client.GetAsync(
+            $"/api/Blogposts/{createdBlogpost.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+
+        var savedBlogpost = await getResponse.Content
+            .ReadFromJsonAsync<BlogpostDto>();
+
+        Assert.NotNull(savedBlogpost);
+        Assert.Equal(createdBlogpost.Id, savedBlogpost.Id);
+        Assert.Equal(newBlogpost.Title, savedBlogpost.Title);
+        Assert.Equal(newBlogpost.Content, savedBlogpost.Content);
     }
 
     [Fact]
@@ -104,6 +120,27 @@ public class BlogpostsControllerTests : IAsyncLifetime
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_InvalidPublicationDate_ReturnsBadRequest()
+    {
+        // Arrange
+        using var client = await LoginAsAsync(AppRoles.Admin);
+
+        var invalidBlogpost = new
+        {
+            Title = $"{_testPrefix}_invalid",
+            Content = "Inhoud van testblogpost",
+            PublicationDate = "geen-datum"
+        };
+
+        // Act
+        using var response = await client.PostAsJsonAsync(
+            "/api/Blogposts", invalidBlogpost);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -124,16 +161,53 @@ public class BlogpostsControllerTests : IAsyncLifetime
         using var response = await client.PutAsJsonAsync(
             $"/api/Blogposts/{blogpostId}", updatedBlogpost);
 
+        // Assert
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
         using var getResponse = await client.GetAsync(
             $"/api/Blogposts/{blogpostId}");
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
         var blogpost = await getResponse.Content
             .ReadFromJsonAsync<BlogpostDto>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         Assert.NotNull(blogpost);
         Assert.Equal(updatedBlogpost.Title, blogpost.Title);
+        Assert.Equal(updatedBlogpost.Content, blogpost.Content);
+    }
+
+    [Fact]
+    public async Task Put_InvalidPublicationDate_ReturnsBadRequest()
+    {
+        // Arrange
+        var blogpostId = await AddTestBlogpostAsync();
+        using var client = await LoginAsAsync(AppRoles.Admin);
+
+        var invalidBlogpost = new
+        {
+            Title = $"{_testPrefix}_updated",
+            Content = "Bijgewerkte inhoud",
+            PublicationDate = "geen-datum"
+        };
+
+        // Act
+        using var response = await client.PutAsJsonAsync(
+            $"/api/Blogposts/{blogpostId}", invalidBlogpost);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var getResponse = await client.GetAsync(
+            $"/api/Blogposts/{blogpostId}");
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+
+        var blogpost = await getResponse.Content
+            .ReadFromJsonAsync<BlogpostDto>();
+
+        Assert.NotNull(blogpost);
+        Assert.Equal($"{_testPrefix}_existing", blogpost.Title);
     }
 
     [Fact]
@@ -145,7 +219,7 @@ public class BlogpostsControllerTests : IAsyncLifetime
         var updatedBlogpost = new UpdateBlogpostDto
         {
             Title = $"{_testPrefix}_missing",
-            Content = "Bijgewerkte inhoud",
+            Content = "Inhoud van testblogpost",
             PublicationDate = DateTime.UtcNow
         };
 
@@ -168,11 +242,12 @@ public class BlogpostsControllerTests : IAsyncLifetime
         using var response = await client.DeleteAsync(
             $"/api/Blogposts/{blogpostId}");
 
+        // Assert
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
         using var getResponse = await client.GetAsync(
             $"/api/Blogposts/{blogpostId}");
 
-        // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
 
@@ -341,8 +416,7 @@ public class BlogpostsControllerTests : IAsyncLifetime
 
                 if (user is not null)
                 {
-                    var deleteResult = await userManager.DeleteAsync(
-                        user);
+                    var deleteResult = await userManager.DeleteAsync(user);
 
                     Assert.True(
                         deleteResult.Succeeded,

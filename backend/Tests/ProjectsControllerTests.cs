@@ -29,11 +29,12 @@ public class ProjectsControllerTests : IAsyncLifetime
         // Act
         using var response = await client.GetAsync("/api/Projects");
 
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         var projects = await response.Content
             .ReadFromJsonAsync<List<ProjectDto>>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(projects);
         Assert.Contains(projects, project => project.Id == projectId);
     }
@@ -49,11 +50,12 @@ public class ProjectsControllerTests : IAsyncLifetime
         using var response = await client.GetAsync(
             $"/api/Projects/{projectId}");
 
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         var project = await response.Content
             .ReadFromJsonAsync<ProjectDto>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(project);
         Assert.Equal(projectId, project.Id);
     }
@@ -82,13 +84,27 @@ public class ProjectsControllerTests : IAsyncLifetime
         using var response = await client.PostAsJsonAsync(
             "/api/Projects", newProject);
 
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
         var createdProject = await response.Content
             .ReadFromJsonAsync<ProjectDto>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(createdProject);
         Assert.Equal(newProject.Title, createdProject.Title);
+
+        using var getResponse = await client.GetAsync(
+            $"/api/Projects/{createdProject.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+
+        var savedProject = await getResponse.Content
+            .ReadFromJsonAsync<ProjectDto>();
+
+        Assert.NotNull(savedProject);
+        Assert.Equal(createdProject.Id, savedProject.Id);
+        Assert.Equal(newProject.Title, savedProject.Title);
+        Assert.Equal(newProject.Description, savedProject.Description);
     }
 
     [Fact]
@@ -104,6 +120,29 @@ public class ProjectsControllerTests : IAsyncLifetime
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_InvalidTitleType_ReturnsBadRequest()
+    {
+        // Arrange
+        using var client = await LoginAsAsync(AppRoles.Admin);
+
+        var invalidProject = new
+        {
+            Title = 123,
+            Description = "Beschrijving",
+            Tags = new[] { "test" },
+            Goal = "Testdoel",
+            Learned = "Testresultaat"
+        };
+
+        // Act
+        using var response = await client.PostAsJsonAsync(
+            "/api/Projects", invalidProject);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -126,16 +165,54 @@ public class ProjectsControllerTests : IAsyncLifetime
         using var response = await client.PutAsJsonAsync(
             $"/api/Projects/{projectId}", updatedProject);
 
+        // Assert
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
         using var getResponse = await client.GetAsync(
             $"/api/Projects/{projectId}");
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
         var project = await getResponse.Content
             .ReadFromJsonAsync<ProjectDto>();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         Assert.NotNull(project);
         Assert.Equal(updatedProject.Title, project.Title);
+    }
+
+    [Fact]
+    public async Task Put_InvalidTitleType_ReturnsBadRequest()
+    {
+        // Arrange
+        var projectId = await AddTestProjectAsync();
+        using var client = await LoginAsAsync(AppRoles.Admin);
+
+        var invalidProject = new
+        {
+            Title = 123,
+            Description = "Bijgewerkte beschrijving",
+            Tags = new[] { "test" },
+            Goal = "Testdoel",
+            Learned = "Testresultaat"
+        };
+
+        // Act
+        using var response = await client.PutAsJsonAsync(
+            $"/api/Projects/{projectId}", invalidProject);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        using var getResponse = await client.GetAsync(
+            $"/api/Projects/{projectId}");
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+
+        var project = await getResponse.Content
+            .ReadFromJsonAsync<ProjectDto>();
+
+        Assert.NotNull(project);
+        Assert.Equal($"{_testPrefix}_existing", project.Title);
     }
 
     [Fact]
@@ -172,11 +249,12 @@ public class ProjectsControllerTests : IAsyncLifetime
         using var response = await client.DeleteAsync(
             $"/api/Projects/{projectId}");
 
+        // Assert
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
         using var getResponse = await client.GetAsync(
             $"/api/Projects/{projectId}");
 
-        // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
 
@@ -349,8 +427,7 @@ public class ProjectsControllerTests : IAsyncLifetime
 
                 if (user is not null)
                 {
-                    var deleteResult = await userManager.DeleteAsync(
-                        user);
+                    var deleteResult = await userManager.DeleteAsync(user);
 
                     Assert.True(
                         deleteResult.Succeeded,
